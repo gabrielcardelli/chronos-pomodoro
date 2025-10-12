@@ -1,15 +1,27 @@
-import { TimerIcon } from 'lucide-react';
 import styles from './styles.module.css';
 
 type DefaultInputProps = {
   id: string;
+  labelText?: string;
 } & React.ComponentProps<'input'>;
 
-export function DefaultInput({ id, type }: DefaultInputProps) {
+export function DefaultInput({
+  id,
+  type,
+  labelText,
+  ...rest
+}: DefaultInputProps) {
   return (
     <>
-      <label htmlFor={id}>Task</label>
-      <input type={type} id={id} name='task' />
+      {labelText && <label htmlFor={id}>{labelText}</label>}
+      <input
+        className={styles.input}
+        type={type}
+        id={id}
+        name='task'
+        autoComplete='off'
+        {...rest}
+      />
     </>
   );
 }
