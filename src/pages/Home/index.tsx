@@ -7,13 +7,7 @@ import { Footer } from '../../components/Footer';
 import { MainTemplate } from '../../templates/MainTemplate';
 import type { TaskStateModel } from '../../models/TaskStateModel';
 
-type HomeProps = {
-  state: TaskStateModel;
-  setState: React.Dispatch<React.SetStateAction<TaskStateModel>>;
-};
-
-export function Home({ state, setState }: HomeProps) {
-  console.log(state);
+export function Home() {
   return (
     <MainTemplate>
       <Container>
