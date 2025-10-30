@@ -5,9 +5,15 @@ import { DefaultInput } from '../DefaultInput';
 import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { useRef, useState } from 'react';
 import type { TaskModel } from '../../models/TaskModel';
+import { getNextCycle } from '../../utils/getNextCycle';
+import { getNextCycleType } from '../../utils/getNextCycleType';
+import { formatSecondsToMinutes } from '../../utils/formatSecondsToMinutes';
 
 export function MainForm() {
-  const { setState } = useTaskContext();
+  const { state, setState } = useTaskContext();
+
+  const nextCycle = getNextCycle(state.currentCycle);
+  const nextCycleType = getNextCycleType(nextCycle);
 
   const taskNameInput = useRef<HTMLInputElement>(null);
 
@@ -25,11 +31,11 @@ export function MainForm() {
     const newTask: TaskModel = {
       id: Date.now().toString(),
       name: taskName,
-      duration: 15,
+      duration: state.config[nextCycleType],
       startDate: Date.now(),
       completeDate: null,
       interuptDate: null,
-      type: 'workTime',
+      type: nextCycleType,
     };
 
     const secondsRemaining = newTask.duration * 60;
@@ -40,11 +46,9 @@ export function MainForm() {
         ...prevState.config,
       },
       activeTask: newTask,
-      currentCycle: 1,
+      currentCycle: nextCycle,
       secondsRemaining,
-      formattedSecondsRemaining: `${String(
-        Math.floor(secondsRemaining / 60),
-      ).padStart(2, '0')}:${String(secondsRemaining % 60).padStart(2, '0')}`,
+      formattedSecondsRemaining: formatSecondsToMinutes(secondsRemaining),
       tasks: [...prevState.tasks, newTask],
     }));
 
@@ -66,9 +70,11 @@ export function MainForm() {
       <div className='formRow'>
         <p>Proximo intervalo é de 25</p>
       </div>
-      <div className='formRow'>
-        <Cycles />
-      </div>
+      {state.currentCycle > 0 && (
+        <div className='formRow'>
+          <Cycles />
+        </div>
+      )}
       <div className='formRow'>
         <DefaultButton icon={<PlayCircleIcon />} />
         <DefaultButton icon={<StopCircleIcon />} color='red' />
