@@ -9,9 +9,13 @@ import { getNextCycle } from '../../utils/getNextCycle';
 import { getNextCycleType } from '../../utils/getNextCycleType';
 import { formatSecondsToMinutes } from '../../utils/formatSecondsToMinutes';
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
+import { Tips } from '../Tips';
+import { TimeWorkerManager } from '../../workers/TimeWorkManager';
 
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
+
+  // ciclos
 
   const nextCycle = getNextCycle(state.currentCycle);
   const nextCycleType = getNextCycleType(nextCycle);
@@ -32,6 +36,22 @@ export function MainForm() {
       alert('Por favor, insira um nome para a tarefa.');
       return;
     }
+
+    const worker = TimeWorkerManager.getInstance();
+
+    worker.postMessage('FAVOR');
+    worker.postMessage('FALA_OI');
+    worker.postMessage('BLABLABLA');
+    worker.postMessage('FECHAR');
+    // worker.onmessage = function (e) {
+    //   console.log('Mensagem recebida do worker:', e.data);
+    // };
+
+    worker.onmessage(event => {
+      worker.terminate();
+    });
+
+    worker.terminate;
 
     const newTask: TaskModel = {
       id: Date.now().toString(),
@@ -64,7 +84,7 @@ export function MainForm() {
         />
       </div>
       <div className='formRow'>
-        <p>Proximo intervalo é de 25</p>
+        <Tips />
       </div>
       {state.currentCycle > 0 && (
         <div className='formRow'>
