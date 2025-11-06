@@ -37,21 +37,21 @@ export function MainForm() {
       return;
     }
 
-    const worker = TimeWorkerManager.getInstance();
+    // const worker = TimeWorkerManager.getInstance();
 
-    worker.postMessage('FAVOR');
-    worker.postMessage('FALA_OI');
-    worker.postMessage('BLABLABLA');
-    worker.postMessage('FECHAR');
-    // worker.onmessage = function (e) {
-    //   console.log('Mensagem recebida do worker:', e.data);
-    // };
+    // worker.postMessage('FAVOR');
+    // worker.postMessage('FALA_OI');
+    // worker.postMessage('BLABLABLA');
+    // worker.postMessage('FECHAR');
+    // // worker.onmessage = function (e) {
+    // //   console.log('Mensagem recebida do worker:', e.data);
+    // // };
 
-    worker.onmessage(event => {
-      worker.terminate();
-    });
+    // worker.onmessage(event => {
+    //   worker.terminate();
+    // });
 
-    worker.terminate;
+    // worker.terminate;
 
     const newTask: TaskModel = {
       id: Date.now().toString(),

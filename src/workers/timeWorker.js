@@ -1,24 +1,25 @@
+let isRunning = false;
+
 self.onmessage = function (e) {
-  console.log('Worker received message:', e.data);
+  if (isRunning) return;
 
-  self.postMessage('Olá do worker!');
+  isRunning = true;
 
-  switch (e.data) {
-    case 'FAVOR': {
-      self.postMessage('Posso fazer favor');
-      break;
-    }
-    case 'FALA_OI': {
-      self.postMessage('OI!!!');
-      break;
-    }
-    case 'FECHAR': {
-      self.postMessage('TA BOM, TCHAU!');
-      self.close;
-      break;
-    }
-    default: {
-      self.postMessage('Não entendi!');
-    }
+  const state = e.data;
+  const { activeTask, secondsRemaining } = state;
+
+  const endDate = activeTask.startDate + secondsRemaining * 1000;
+
+  const now = Date.now();
+  let countDownSeconds = Math.ceil((endDate - now) / 1000);
+
+  function tick() {
+    self.postMessage(countDownSeconds);
+    const now = Date.now();
+    countDownSeconds = Math.floor((endDate - now) / 1000);
+
+    setTimeout(tick, 1000);
   }
+
+  tick();
 };
